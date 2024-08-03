@@ -9,20 +9,26 @@ app.get("/", (req, res) => {
   res.send("Hello World with Nodejs!");
 });
 
-app.post("/login", (req, res) => {
-  const { name } = req.body;
-  res.json({ user: name });
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await Users.login(username, password);
+    res.send({ user });
+  } catch (error) {
+    res.status(401).send(error.message);
+  }
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   const { username, password } = req.body;
   console.log("Body: ", req.body);
 
   try {
-    const id = Users.create(username, password);
+    const id = await Users.create(username, password);
     return res.send({ id });
   } catch (error) {
-    res.status(400).send("Error!");
+    res.status(400).send(error.message);
   }
 });
 
