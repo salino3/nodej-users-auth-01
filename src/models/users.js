@@ -45,7 +45,9 @@ export class Users {
       throw new Error("Invalid username or password");
     }
 
-    return user;
+    const { password: _, ...publicUser } = user || {};
+
+    return publicUser;
   }
 }
 
