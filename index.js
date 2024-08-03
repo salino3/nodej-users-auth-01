@@ -1,12 +1,22 @@
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 import { PORT } from "./config.js";
 import { Users } from "./src/models/users.js";
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.set("view engine", "ejs"); // only it without 'src' folder
+app.set("views", path.join(__dirname, "src", "views"));
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello World with Nodejs!");
+  res.render("index", {
+    username: "Andrés",
+  });
 });
 
 app.post("/login", async (req, res) => {
@@ -34,7 +44,9 @@ app.post("/register", async (req, res) => {
 
 app.post("/logout", (req, res) => {});
 
-app.get("/protected", (req, res) => {});
+app.get("/protected", (req, res) => {
+  res.render("protected");
+});
 
 //
 app.listen(PORT, () => {
